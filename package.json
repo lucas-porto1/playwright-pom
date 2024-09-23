@@ -1,0 +1,24 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.5.5",
+    "eslint-plugin-playwright": "^1.6.2",
+    "globals": "^15.9.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "playwright": "file:"
+  }
+}
