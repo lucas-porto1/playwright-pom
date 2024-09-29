@@ -1,6 +1,6 @@
 # Playwright POM Project
-![JavaScript](https://img.shields.io/badge/JavaScript-yellow.svg)
-![Playwright](https://img.shields.io/badge/Playwright-blue.svg)
+[![JavaScript](https://img.shields.io/badge/JavaScript-yellow.svg)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
+[![Playwright](https://img.shields.io/badge/Playwright-blue.svg)](https://playwright.dev/)
 
 This project is an automated test suite using [Playwright](https://playwright.dev/) with the **Page Object Model (POM)** design pattern. It includes configurations for managing environment variables with **dotenv** and code standardization with **ESLint**.
 
