@@ -8,7 +8,7 @@
     "test:ui": "npx playwright test --ui"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lucas Porto",
   "license": "ISC",
   "description": "",
   "devDependencies": {
