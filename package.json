@@ -14,7 +14,7 @@
     "check": "npm run lint && npm run test:chromium"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lucas Porto",
   "license": "ISC",
   "description": "Reference architecture for end-to-end QA automation with Playwright and Page Objects.",
   "devDependencies": {
