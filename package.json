@@ -1,5 +1,5 @@
 {
-  "name": "playwright-pom-reference",
+  "name": "playwright-pom-js",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -19,7 +19,7 @@
   "keywords": [],
   "author": "Lucas Porto",
   "license": "ISC",
-  "description": "Reference architecture for end-to-end QA automation with Playwright and Page Objects.",
+  "description": "JavaScript reference architecture for end-to-end QA automation with Playwright and Page Objects.",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "eslint": "^10.8.1",

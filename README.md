@@ -1,6 +1,6 @@
-# Playwright POM Reference
+# Playwright POM JavaScript Reference
 
-A reference architecture for end-to-end test automation with Playwright, the Page Object Model, reusable fixtures, and CI execution.
+A JavaScript reference architecture for end-to-end test automation with Playwright, the Page Object Model, reusable fixtures, ES Modules, and CI execution.
 
 ## Design principles
 
@@ -16,6 +16,15 @@ A reference architecture for end-to-end test automation with Playwright, the Pag
 
 - Node.js 24 LTS
 - npm
+
+## Getting started
+
+To start an independent project with this architecture, select **Use this template** on GitHub. To work directly with this repository, clone it locally:
+
+```bash
+git clone https://github.com/lucas-porto1/playwright-pom-js.git
+cd playwright-pom-js
+```
 
 ## Installation
 
