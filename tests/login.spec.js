@@ -1,6 +1,8 @@
 import { test, expect } from '../fixtures/test.js';
 import { getLockedUser, getMainUser } from '../utils/environment.js';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe('Login', () => {
     test.beforeEach(async ({ loginPage }) => {
         await loginPage.open();

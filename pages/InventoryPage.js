@@ -6,6 +6,10 @@ export class InventoryPage {
         this.cartBadge = page.getByTestId('shopping-cart-badge');
     }
 
+    async open() {
+        await this.page.goto('/inventory.html');
+    }
+
     productCard(productName) {
         return this.page.getByTestId('inventory-item').filter({
             has: this.page.getByTestId('inventory-item-name').filter({ hasText: productName }),

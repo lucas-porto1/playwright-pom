@@ -3,8 +3,9 @@ import { customers } from '../test-data/customers.js';
 import { products } from '../test-data/products.js';
 
 test.describe('Checkout', () => {
-    test.beforeEach(async ({ authenticatedPage }) => {
-        await expect(authenticatedPage).toHaveURL('/inventory.html');
+    test.beforeEach(async ({ page, inventoryPage }) => {
+        await inventoryPage.open();
+        await expect(page).toHaveURL('/inventory.html');
     });
 
     test('completes a purchase successfully', async ({

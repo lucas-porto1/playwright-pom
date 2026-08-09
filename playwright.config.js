@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true });
 
+const authStatePath = 'playwright/.auth/user.json';
+
 export default defineConfig({
   testDir: './tests',
   outputDir: './test-results',
@@ -26,16 +28,23 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      testMatch: /.*\.setup\.js/,
+    },
+    {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], storageState: authStatePath },
+      dependencies: ['setup'],
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], storageState: authStatePath },
+      dependencies: ['setup'],
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'], storageState: authStatePath },
+      dependencies: ['setup'],
     },
   ],
 });
