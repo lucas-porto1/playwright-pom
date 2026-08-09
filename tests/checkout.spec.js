@@ -1,54 +1,56 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from '../pages/LoginPage'
-import { CheckoutPage } from '../pages/CheckoutPage'
+import { test, expect } from '../fixtures/test.js';
+import { customers } from '../test-data/customers.js';
+import { products } from '../test-data/products.js';
 
-test.describe('Validate checkout', () => {
-    const username = process.env.MAIN_USER
-    const password = process.env.MAIN_PASSWORD
-    let loginPage, checkoutPage
+test.describe('Checkout', () => {
+    test.beforeEach(async ({ authenticatedPage }) => {
+        await expect(authenticatedPage).toHaveURL('/inventory.html');
+    });
 
-    test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page)
-        checkoutPage = new CheckoutPage(page)
+    test('completes a purchase successfully', async ({
+        page,
+        inventoryPage,
+        cartPage,
+        checkoutPage,
+    }) => {
+        const product = products.backpack;
 
-        await page.goto('')
-        await loginPage.login(username, password)
-    })
+        await test.step('Add the product and review the cart', async () => {
+            await inventoryPage.addProduct(product.name);
+            await expect(inventoryPage.cartBadge).toHaveText('1');
+            await inventoryPage.openCart();
+            await expect(cartPage.item(product.name)).toContainText(product.price);
+        });
 
-    test('Should purchase a product successfully', async ({ page }) => {
-        const firstName = "Lucas"
-        const lastName = "Porto"
-        const postalCode = "000000000"
-        const productName = 'Sauce Labs Backpack'
-        const productDesc = 'carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.'
-        const productPrice = '$29.99'
+        await test.step('Provide customer information', async () => {
+            await cartPage.startCheckout();
+            await checkoutPage.fillCustomerInformation(customers.valid);
+            await checkoutPage.continue();
+            await expect(checkoutPage.summaryItem(product.name)).toContainText(product.price);
+        });
 
-        await checkoutPage.addProduct()
-        await checkoutPage.goToCart()
-        await expect(checkoutPage.productNameText).toHaveText(productName)
-        await expect(checkoutPage.productDescText).toHaveText(productDesc)
-        await expect(checkoutPage.productPriceText).toHaveText(productPrice)
-        await checkoutPage.goToCheckout()
-        await checkoutPage.checkoutInformation(firstName, lastName, postalCode)
-        await expect(checkoutPage.productNameText).toHaveText(productName)
-        await expect(checkoutPage.productDescText).toHaveText(productDesc)
-        await expect(checkoutPage.productPriceText).toHaveText(productPrice)
-        await checkoutPage.finishOrder()
-        await expect(checkoutPage.successMessage).toHaveText('Thank you for your order!')
-    })
+        await test.step('Finish the order', async () => {
+            await checkoutPage.finishOrder();
+            await expect(checkoutPage.successMessage).toHaveText('Thank you for your order!');
+            await expect(page).toHaveURL('/checkout-complete.html');
+        });
+    });
 
-    test('Validate empty shipping information', async ({ page }) => {
-        await checkoutPage.addProduct()
-        await checkoutPage.goToCart()
-        await checkoutPage.goToCheckout()
-        await checkoutPage.checkoutInformation('', '', '')
-        await expect(checkoutPage.errorMessage).toHaveText('Error: First Name is required')
-    })
+    test('validates required customer information', async ({ inventoryPage, cartPage, checkoutPage }) => {
+        await inventoryPage.addProduct(products.backpack.name);
+        await inventoryPage.openCart();
+        await cartPage.startCheckout();
+        await checkoutPage.fillCustomerInformation({ firstName: '', lastName: '', postalCode: '' });
+        await checkoutPage.continue();
 
-    test('Validate item being added and removed', async ({ page }) => {
-        await checkoutPage.addProduct()
-        await expect(checkoutPage.cartBadge).toBeEnabled()
-        await checkoutPage.removeProduct()
-        await expect(checkoutPage.cartBadge).toBeHidden()
-    })
-})
+        await expect(checkoutPage.errorMessage).toHaveText('Error: First Name is required');
+    });
+
+    test('updates the cart when a product is added and removed', async ({ inventoryPage }) => {
+        await inventoryPage.addProduct(products.backpack.name);
+        await expect(inventoryPage.cartBadge).toHaveText('1');
+
+        await inventoryPage.removeProduct(products.backpack.name);
+        await expect(inventoryPage.cartBadge).toBeHidden();
+    });
+});

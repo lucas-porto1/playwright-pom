@@ -1,35 +1,34 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from '../pages/LoginPage'
+import { test, expect } from '../fixtures/test.js';
+import { getLockedUser, getMainUser } from '../utils/environment.js';
 
-test.describe('Validate login', () => {
-    let loginPage, username, password
+test.describe('Login', () => {
+    test.beforeEach(async ({ loginPage }) => {
+        await loginPage.open();
+    });
 
-    test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page)
-        await page.goto('')
-    })
+    test('allows a valid user to sign in', async ({ page, loginPage }) => {
+        await test.step('Sign in with a valid account', async () => {
+            const { username, password } = getMainUser();
+            await loginPage.login(username, password);
+        });
 
-    test('Should log in successfully', async ({ page }) => {
-        username = process.env.MAIN_USER
-        password = process.env.MAIN_PASSWORD
+        await expect(page).toHaveURL('/inventory.html');
+    });
 
-        await loginPage.login(username, password)
-        await expect(page).toHaveURL('/inventory.html')
-    })
+    test('shows an error for a locked user', async ({ loginPage }) => {
+        const { username, password } = getLockedUser();
+        await loginPage.login(username, password);
 
-    test('Should display locked-out user', async ({ page }) => {
-        username = process.env.LOCKED_USER
-        password = process.env.LOCKED_PASSWORD
+        await expect(loginPage.errorMessage).toHaveText(
+            'Epic sadface: Sorry, this user has been locked out.',
+        );
+    });
 
-        await loginPage.login(username, password)
-        await expect(loginPage.errorMessage).toHaveText('Epic sadface: Sorry, this user has been locked out.')
-    })
+    test('shows an error for invalid credentials', async ({ loginPage }) => {
+        await loginPage.login('invalid_user', 'invalid_password');
 
-    test('Should display invalid user', async ({ page }) => {
-        username = 'lucas_porto'
-        password = 'simplePlaywrightTest'
-
-        await loginPage.login(username, password)
-        await expect(loginPage.errorMessage).toHaveText('Epic sadface: Username and password do not match any user in this service')
-    })
-})
+        await expect(loginPage.errorMessage).toHaveText(
+            'Epic sadface: Username and password do not match any user in this service',
+        );
+    });
+});

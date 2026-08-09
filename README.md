@@ -1,75 +1,86 @@
-# Playwright POM Project
+# Playwright POM Reference
 
-This project is an automated test suite using [Playwright](https://playwright.dev/) with the **Page Object Model (POM)** design pattern. It includes configurations for managing environment variables with **dotenv** and code standardization with **ESLint**.
+A reference architecture for end-to-end test automation with Playwright, the Page Object Model, reusable fixtures, and CI execution.
 
-## Table of Contents
+## Design principles
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Environment Variables](#environment-variables)
-- [Linting](#linting)
+- **Tests describe behavior:** business rules and expectations belong in `*.spec.js` files.
+- **Pages encapsulate interactions:** selectors and actions for a screen belong in its own Page Object.
+- **Fixtures set up the context:** page creation and reusable authentication are centralized.
+- **Test data stays organized:** products and customers used in scenarios belong in `test-data/`.
+- **Configuration fails fast:** required environment variables are validated with a clear message.
+- **Failures leave evidence:** traces, screenshots, and videos are retained according to the configuration.
+
+## Prerequisites
+
+- Node.js 22 or later
+- npm
 
 ## Installation
 
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/lucas-porto1/playwright-pom.git
-   cd playwright-pom
-   ```
-
-2. **Install the dependencies:**
-
-   ```
-   npm install
-   ```
-
-3. **Install Playwright browsers:**
-
-   ```
-   npx playwright install
-   ```
-
-## Usage
-
-### Running Tests
-To run all tests in headless mode:
-``` npm run test ```
-
-To run tests with the UI visible:
-``` npm run test:ui ```
-
-## Project Structure
-
-```kotlin
-├── tests/
-│   ├── login.spec.js
-│   ├── checkout.spec.js
-├── pages/
-│   ├── LoginPage.js
-│   ├── CheckoutPage.js
-├── utils/
-│   ├── helper.js
-├── .env.example
-├── .gitignore
-├── .eslintrc.js
-├── playwright.config.js
-├── package.json
-└── README.md
+```bash
+npm ci
+npx playwright install
 ```
 
-- tests/: Contains test files.
-- pages/: Contains page classes following the POM pattern.
-- utils/: Contains helper functions and utilities.
-- .env.example: Example environment variables file.
-- .eslint.config.js: ESLint configuration file.
-- playwright.config.js: Playwright configuration file.
+Create the local configuration file:
 
-## Environment Variables
-The project uses dotenv to securely manage environment variables.
-- Note: I committed the .env file because this is a test project; in a real scenario, the .env should be inside the gitignore and the .env.example without the credentials.
+```bash
+cp .env.example .env
+```
 
+On Windows PowerShell:
 
-## Linting
-The project uses ESLint to ensure code quality and consistency.
+```powershell
+Copy-Item .env.example .env
+```
+
+The accounts in `.env.example` are public SauceDemo accounts. In a real project, never commit credentials; use the CI pipeline's secret store instead.
+
+## Running the tests
+
+```bash
+npm test                  # full suite in all three browsers
+npm run test:chromium     # fast feedback in Chromium
+npm run test:headed       # run with a visible browser
+npm run test:ui           # Playwright interactive UI mode
+npm run test:debug        # Playwright Inspector
+npm run lint              # static analysis
+npm run check             # lint and Chromium tests
+npm run report            # open the latest HTML report
+```
+
+You can also run a specific file or filter tests by title:
+
+```bash
+npx playwright test tests/login.spec.js
+npx playwright test -g "valid user"
+```
+
+## Project structure
+
+```text
+.
+|-- .github/workflows/     # continuous integration pipeline
+|-- fixtures/              # reusable page and context injection
+|-- pages/                 # Page Objects separated by responsibility
+|-- test-data/             # readable, centralized test data
+|-- tests/                 # scenarios and business expectations
+|-- utils/                 # stateless configuration and utilities
+|-- playwright.config.js   # browsers, artifacts, timeouts, and reporters
+`-- eslint.config.js       # quality standards for the entire codebase
+```
+
+## Adding a scenario
+
+1. If the scenario introduces a new screen, create a file in `pages/` with resilient selectors such as `getByRole`, `getByLabel`, or `getByTestId`.
+2. Expose the page through `fixtures/test.js` to avoid repeated instantiation.
+3. Place reusable test data in `test-data/` and keep it free of sensitive information.
+4. Write expectations in the test. Page Objects should perform actions, not decide whether a test passed.
+5. Run `npm run check` before submitting the change.
+
+## Important decisions
+
+SauceDemo's `data-test` attribute is configured as the Playwright `testIdAttribute`, which enables clear selectors with `getByTestId`. The suite runs in isolation: every test receives a new browser context. Shared login is implemented as a fixture, while every scenario remains independent.
+
+In CI, linting and tests run on every push and pull request. If the application under test uses private credentials, replace the public workflow values with repository secrets.

@@ -1,24 +1,29 @@
 {
-  "name": "playwright",
+  "name": "playwright-pom-reference",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "npx playwright test",
-    "test:ui": "npx playwright test --ui"
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "lint": "eslint .",
+    "check": "npm run lint && npm run test:chromium"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Reference architecture for end-to-end QA automation with Playwright and Page Objects.",
   "devDependencies": {
     "@playwright/test": "^1.47.2",
-    "@types/node": "^22.5.5",
+    "eslint": "^9.9.1",
     "eslint-plugin-playwright": "^1.6.2",
     "globals": "^15.9.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "playwright": "file:"
+    "dotenv": "^16.4.5"
   }
 }

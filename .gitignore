@@ -1,6 +1,7 @@
 node_modules/
+.env
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-package-lock.json
+.DS_Store
