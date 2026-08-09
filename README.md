@@ -17,6 +17,8 @@ A JavaScript reference architecture for end-to-end test automation with Playwrig
 - Node.js 24 LTS
 - npm
 
+The repository includes an `.nvmrc` file so compatible version managers such as nvm or fnm can select Node.js 24 with `nvm use` or `fnm use`.
+
 ## Getting started
 
 To start an independent project with this architecture, select **Use this template** on GitHub. To work directly with this repository, clone it locally:
