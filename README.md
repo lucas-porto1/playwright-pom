@@ -13,7 +13,7 @@ A reference architecture for end-to-end test automation with Playwright, the Pag
 
 ## Prerequisites
 
-- Node.js 22 or later
+- Node.js 24 LTS
 - npm
 
 ## Installation
