@@ -58,7 +58,9 @@ npm run test:headed       # run with a visible browser
 npm run test:ui           # Playwright interactive UI mode
 npm run test:debug        # Playwright Inspector
 npm run lint              # static analysis
-npm run check             # lint and Chromium tests
+npm run format            # format project files
+npm run format:check      # verify formatting without changing files
+npm run check             # lint, formatting, and Chromium tests
 npm run report            # open the latest HTML report
 ```
 
@@ -81,7 +83,9 @@ This shared account strategy is appropriate while tests do not modify persistent
 
 ```text
 .
-|-- .github/workflows/     # continuous integration pipeline
+|-- .github/
+|   |-- workflows/         # continuous integration pipeline
+|   `-- dependabot.yml     # semiannual dependency update configuration
 |-- fixtures/              # reusable page and context injection
 |-- pages/                 # Page Objects separated by responsibility
 |-- test-data/             # readable, centralized test data
@@ -104,3 +108,5 @@ This shared account strategy is appropriate while tests do not modify persistent
 SauceDemo's `data-test` attribute is configured as the Playwright `testIdAttribute`, which enables clear selectors with `getByTestId`. Every test still receives a new browser context. Authenticated contexts start from the same read-only login snapshot, while state created during a scenario remains isolated from other tests.
 
 In CI, linting and tests run on every push and pull request. If the application under test uses private credentials, replace the public workflow values with repository secrets.
+
+Dependabot checks npm packages and GitHub Actions twice a year and opens grouped pull requests for minor and patch updates. Major updates remain separate so their breaking changes can be reviewed carefully.
