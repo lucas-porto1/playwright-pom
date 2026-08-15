@@ -1,4 +1,8 @@
-# Playwright POM JavaScript Reference
+# Playwright POM — JavaScript Reference
+
+[![CI](https://github.com/lucas-porto1/playwright-pom-js/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/lucas-porto1/playwright-pom-js/actions/workflows/playwright.yml)
+
+_Part of [Lucas Porto's QA Automation Reference Collection](https://github.com/lucas-porto1): QA-first templates built for readability, reproducibility, and sustainable maintenance._
 
 A JavaScript reference architecture for end-to-end test automation with Playwright, the Page Object Model, reusable fixtures, ES Modules, and CI execution.
 
