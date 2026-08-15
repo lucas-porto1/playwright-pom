@@ -111,6 +111,18 @@ This shared account strategy is appropriate while tests do not modify persistent
 
 SauceDemo's `data-test` attribute is configured as the Playwright `testIdAttribute`, which enables clear selectors with `getByTestId`. Every test still receives a new browser context. Authenticated contexts start from the same read-only login snapshot, while state created during a scenario remains isolated from other tests.
 
-In CI, linting and tests run on every push and pull request. If the application under test uses private credentials, replace the public workflow values with repository secrets.
+## Reports
+
+Each execution generates a Playwright HTML report under `playwright-report/`. Open it locally with `npm run report`. The latest report from `main` is available at [lucas-porto1.github.io/playwright-pom-js](https://lucas-porto1.github.io/playwright-pom-js/), so it can be viewed without downloading an artifact.
+
+## CI behavior
+
+CI runs linting and tests on every push and pull request. Runs on `main` publish the HTML report to GitHub Pages and add its direct URL to the job summary. Pull requests do not replace the published report; traces, screenshots, videos, and the HTML report are retained as a downloadable artifact only when a run fails.
+
+Before the first deployment, select **GitHub Actions** as the Pages source under the repository's **Settings > Pages**.
+
+Reports and failure evidence can contain test data and screenshots. Disable public Pages publishing or use access-controlled reporting infrastructure before reusing this setup with sensitive client systems. If the application under test uses private credentials, replace the public workflow values with repository secrets.
+
+## Dependency maintenance
 
 Dependabot checks npm packages and GitHub Actions twice a year and opens grouped pull requests for minor and patch updates. Major updates remain separate so their breaking changes can be reviewed carefully.
